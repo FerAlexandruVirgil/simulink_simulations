@@ -11,4 +11,15 @@ Power Electronics course project (UTCN). The results and plots are explained in 
 
 Reusable subsystems used by the Simscape models: `generator_pwm.slx`, `transistor_driver.slx`, `current_senzor.slx`, `voltage_sensor.slx`.
 
+**Labs with a hysteresis modulator:**
+
+| File | Content |
+|---|---|
+| `lab3-hysteresis-modulator/lab3_buck_closed_loop.slx` | hysteresis modulator driving a buck converter written as state equations, in a closed loop with a 14 V reference |
+| `lab3-hysteresis-modulator/lab3_simulate.m` | simulates the closed loop and writes `figures/lab3_buck_hysteresis.png` |
+| `ep2-hysteresis-modulator/ep2_modulator.slx` | the modulator on its own: integrator + relay with hysteresis, 0/1 output (input left unconnected in the model) |
+| `ep2-hysteresis-modulator/ep2_simulate.m` | simulates the model as saved, then with a stepped command added in memory; writes `figures/ep2_hysteresis_modulator.png` |
+
+Neither script saves changes to the `.slx` files.
+
 Run any script from `src/` (MATLAB R2026a, Simulink, Simscape Electrical, Control System Toolbox). Comments and plot labels are in Romanian, and so are the reports in `reports/`.

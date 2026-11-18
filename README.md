@@ -12,6 +12,8 @@ Coursework projects in automatic control from the Technical University of Cluj-N
 .
 ├── 01-buck-converter-power-electronics/
 │   ├── src/          MATLAB scripts + Simulink/Simscape models (.slx)
+│   ├── lab3-hysteresis-modulator/   lab: buck converter driven by a hysteresis modulator
+│   ├── ep2-hysteresis-modulator/    lab: the hysteresis modulator on its own
 │   ├── figures/      simulation plots
 │   ├── results/      saved simulation results (.mat)
 │   └── reports/      written reports (PDF, in Romanian)
@@ -105,6 +107,27 @@ The controller was placed in the physical model from 1.2 with **all parasitics a
 ![With vs. without controller](01-buck-converter-power-electronics/figures/t3b_tensiune.png)
 
 The integral action removes the error caused by the component losses, and the response becomes non-oscillatory.
+
+### 1.5 Lab: buck converter driven by a hysteresis modulator (`lab3-hysteresis-modulator/`)
+
+A second way to produce the switching signal: a hysteresis (sigma-delta) modulator instead of a fixed-frequency PWM. The converter (`lab3_buck_closed_loop.slx`) is written directly as state equations with integrator blocks (E = 24 V, 1/L = 10, 1/C = 100, 1/(RC) = 10). The output voltage is compared with a 14 V reference, and the error goes through a 0.5/(s+1) controller to the modulator.
+
+In simulation the converter switches at about **124 Hz** and the output settles at **13.07 V** with 0.075 V ripple. The controller has no integrator, so ~0.9 V of steady-state error remains, as the static loop gain predicts (U = 28.8/2.2 ≈ 13.09 V).
+
+![Buck converter with hysteresis modulator](01-buck-converter-power-electronics/figures/lab3_buck_hysteresis.png)
+
+### 1.6 Lab: the hysteresis modulator on its own (`ep2-hysteresis-modulator/`)
+
+`ep2_modulator.slx` isolates the modulator. The command passes through 0.5/(s+1). An integrator then accumulates the difference between the command and 10× the relay output, and a relay with ±0.01 hysteresis (output ±0.5, plus 0.5) produces the 0/1 switching signal.
+
+The integrator ramps with slope c + 5 and c − 5 between the two thresholds, which gives:
+
+- **average duty cycle** d = 0.5 + c/10, so the average output follows the command;
+- **switching frequency** f = 125 − 5c² Hz, set by the hysteresis band rather than a carrier: 125 Hz at d = 0.5, and lower as d moves away from 0.5.
+
+In the saved model the input is not connected, so the command is 0 and the output switches at 125 Hz with d = 0.50. `ep2_simulate.m` also applies a stepped command to the input, in memory only. The averaged duty cycle then tracks 0.5 + c/10 (e.g. 0.2165 measured vs. 0.2165 predicted at c = −2.84).
+
+![Hysteresis modulator](01-buck-converter-power-electronics/figures/ep2_hysteresis_modulator.png)
 
 Full reports (in Romanian): [Part 1](01-buck-converter-power-electronics/reports/Tema1_Convertor_buck.pdf) · [Part 2](01-buck-converter-power-electronics/reports/Tema2_Model_Simscape.pdf) · [Part 3](01-buck-converter-power-electronics/reports/Tema3_Reglare.pdf)
 
