@@ -1,3 +1,5 @@
+achizitie = false;   % true doar cu motorul conectat (necesita toolbox-ul DCMRun al laboratorului)
+
 %
 u = zeros(1,370);
 u(31:100)=0.7;
@@ -8,15 +10,16 @@ figure
 plot(u); grid on
 
 %
-[vel,~, t] = DCMRun.run(u,'port', 'COM5', 'Ts', 1e-2);
+if achizitie
+    [vel,~, t] = DCMRun.run(u,'port', 'COM5', 'Ts', 1e-2);
+    save('step_dateDCM.mat', 't', 'vel');
+end
 %
-save('step_dateDCM.mat', 't', 'vel');
+load("step_dateDCM.mat");
 %
 plot(t,vel);
 %
 plot(vel);
-%
-load("step_dateDCM.mat");
 %
 u_id = u(31:100);
 y_id = vel(31:100);
@@ -36,8 +39,7 @@ disp(K);
 %
 u_v = u(171:370);
 y_v = vel(171:370);
-t_v = 0:0.1:20;
-t_v = t_v(1:end-1);
+t_v = (0:numel(u_v)-1)*1e-2;   % aceeasi perioada de esantionare ca la masurare (Ts = 10 ms)
 %
 y_c = lsim(G, u_v, t_v);
 
@@ -57,8 +59,10 @@ u_imp(331:332) = 1;
 %
 plot(u_imp);
 %
-[vel,~,t] = DCMRun.run(u_imp,'port','COM5','Ts',1e-2);
-save('impuls_dateDCM.mat','t','u_imp','vel');
+if achizitie
+    [vel,~,t] = DCMRun.run(u_imp,'port','COM5','Ts',1e-2);
+    save('impuls_dateDCM.mat','t','u_imp','vel');
+end
 
 %
 load('impuls_dateDCM.mat');
@@ -71,7 +75,7 @@ plot(vel)
 % 1/alpha = 1 (in cazul meu) => alpha este 1
 
 %
-yss = mean(vel(140:150));
+yss = mean(vel(100:130));   % regim stationar pentru u = 0.1, inainte de al doilea impuls
 K   = yss/0.1;                 
 
 y_id = vel(:);
@@ -97,7 +101,7 @@ tv = (0:numel(uv)-1)*1e-2;
 Gs = ss(G);
 x0  = K*0.1;                     
 
-y_t = lsim(Gs, uv, tv);
+y_t = lsim(Gs, uv, tv, x0/Gs.C);   % pornire din regimul stationar y = K*0.1
 
 
 figure

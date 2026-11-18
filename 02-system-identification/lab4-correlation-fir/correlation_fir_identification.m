@@ -1,12 +1,16 @@
 %% 
+achizitie = false;   % true doar cu motorul conectat (necesita toolbox-ul DCMRun al laboratorului)
+
 ts = 0.01;
 n  = 30;      
 Nid = 500;    
 nv = 70;  
 %%
- u = [zeros(n,1); 1.4*rand(Nid,1)-0.7; zeros(n,1); 0.2*ones(nv,1)];
- [y, ~, t] = DCMRun.run(u, 'port', 'com5', 'Ts', ts);
- save('lab4_dateDCM.mat', 'u', 'y', 't');
+if achizitie
+    u = [zeros(n,1); 1.4*rand(Nid,1)-0.7; zeros(n,1); 0.2*ones(nv,1)];
+    [y, ~, t] = DCMRun.run(u, 'port', 'com5', 'Ts', ts);
+    save('lab4_dateDCM.mat', 'u', 'y', 't');
+end
 %%
 load('lab4_dateDCM.mat');
 
@@ -61,9 +65,9 @@ yhat = yhat(1:length(u));
 t_sim = (0:length(u)-1)' * ts;
 
 figure;
-plot( y);
+plot(t_sim, y);
 hold on;
-plot(yhat);
+plot(t_sim, yhat);
 xline(t_sim(idx_val(1)), '--');
 
 mse_id  = mean((y(idx_id)  - yhat(idx_id)).^2);

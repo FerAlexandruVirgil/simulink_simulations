@@ -39,7 +39,7 @@ y_aprox = reshape(y_aprox, size(outputData));
 %%
  close all;
  figure
- mesh(y_aprox'); grid on
+ mesh(y_aprox); grid on
  hold on
  mesh(outputData); grid on
  legend('Iesire aproximata', 'Iesire reala');
@@ -84,7 +84,7 @@ fprintf('MSE validare = %f\n', mse_val);
 %%
 
 figure
-mesh(y_aprox_val'); grid on
+mesh(y_aprox_val); grid on
 hold on
 mesh(outputData_val); grid on
 legend('Iesire aproximata', 'Iesire reala');

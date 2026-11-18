@@ -40,7 +40,7 @@ Vrpd = Vrp*(tsp/tspd);
 
 wt2 = wt1*(tsp/tspd);
 Td = 0.5;
-Tn = Td*(tsp / tspd);
+Tn = Td*(tspd / tsp);   % polul se muta de tsp/tspd ori mai departe (avans de faza)
 Hcpd = tf([Vrpd*Td Vrpd], [Tn 1]);
 
 Ho = feedback(series(Hcpd,Hf),1);

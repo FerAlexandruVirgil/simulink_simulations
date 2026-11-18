@@ -48,9 +48,7 @@ C = struct();
 s7 = 0.07; z7 = abs(log(s7)/sqrt(pi^2 + log(s7)^2));
 A = 1/(4*sqrt(2)*z7^2); Vrp = db2mag(-(1.85 - db(A)));
 C.P = tf(Vrp, 1);
-% PD (lab 7): zero cancels the plant pole (Td = 0.5 s), pole moved tsp/tspd times further left.
-% Note: src/lab07 uses Tn = Td*(tsp/tspd), which makes the block a lag; the lead form
-% (Tn = Td*(tspd/tsp), same as the derivative part of the PID in src/lab08) is used here.
+% PD (lab 7): zero cancels the plant pole (Td = 0.5 s), pole moved tsp/tspd times further left
 tsp = 3.88; tspd = 2; Td = 0.5; Tn = Td*(tspd/tsp);
 C.PD = tf([Vrp*(tsp/tspd)*Td Vrp*(tsp/tspd)], [Tn 1]);
 % PI / lag (lab 8): raise the velocity constant from 1.25 to 7
